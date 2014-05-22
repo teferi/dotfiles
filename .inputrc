@@ -1,0 +1,10 @@
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+set editing-mode vi
+set keymap vi-insert
+"\C-a": beginning-of-line
+"\C-e": end-of-line
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\e[1;2C": forward-word
+"\e[1;2D": backward-word
