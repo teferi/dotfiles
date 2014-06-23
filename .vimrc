@@ -55,8 +55,8 @@ command RTW :%s/\s\+$//e
 
 " also highlight them and some other stuff
 match Todo /\s\+$/
-exec "set listchars=tab:\uBB\uBB"
-set list
+au BufEnter *.py exec "set listchars=tab:\uBB\uBB"
+au BufEnter *.py set list
 
 " comment line, selection with Ctrl-N,Ctrl-N
 "au BufEnter *.py nnoremap  <C-N><C-N>    mn:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR>:noh<CR>`n
@@ -69,6 +69,7 @@ set list
 "au BufEnter *.py vnoremap  <C-N>n     mn:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR>gv:s/#\n/\r/ge<CR>:noh<CR>gv`n
 
 set autoindent
+set autoread
 set expandtab
 set smarttab
 set tabstop=4 shiftwidth=4 softtabstop=4
@@ -80,6 +81,7 @@ set splitright
 set textwidth=0
 " make command completion spawn a menu
 set wildmenu
+set backspace=indent,eol,start
 
 "set colorcolumn=121
 highlight ColorColumn ctermbg=magenta
@@ -208,6 +210,8 @@ let g:syntastic_c_checkers = ['gcc', 'splint', 'ycm']
 let g:syntastic_cpp_compiler_options = '-std=c++0x'
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_auto_refresh_includes = 1
+
+let g:syntastic_javascript_checkers = ['jshint', 'jsl']
 
 let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_confirm_extra_conf = 0

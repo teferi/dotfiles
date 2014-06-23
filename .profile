@@ -3,9 +3,14 @@ alias d=ls
 alias ls='ls -G'
 alias ll='ls -la'
 export ARCHFLAGS='-arch i386 -arch x86_64'
+export PYTHONPATH="/usr/local/Cellar/pil/1.1.7/lib/python2.6/site-packages/:/Users/teferi/lib/:/Users/teferi/git/:$PYTHONPATH"
 
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
+fi
+
+if [ -f "$HOME/etc/.bash_completion.sh" ]; then
+    . "$HOME/etc/.bash_completion.sh"
 fi
 
 alias xgettext=/usr/bin/xgettext.pl
@@ -34,6 +39,7 @@ alias pg_restart="pg_ctl -D /usr/local/var/postgres/ restart"
 alias pg_stop="pg_ctl -m fast -D /usr/local/var/postgres/ stop"
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin:/usr/local/sbin:$PATH
 export PATH=~/bin:$PATH
+export GOPATH=/Users/teferi/go
 export PATH=$PATH:$GOPATH/bin
 export GOMAXPROCS=8
 
@@ -78,7 +84,6 @@ function srvrs {
     printf "\a"
 }
 
-. /usr/local/Cellar/autoenv/0.1.0/activate.sh
 . ~/.git-completion.bash
 
 parse_git_branch() {
@@ -92,6 +97,37 @@ function pip_pip2pi() {
     pip install "$@" && pip2pi $LOCAL_PIP_REPO "$@"
 }
 alias pi=pip_pip2pi
+
+alias ge="git st --short --porcelain -uno | cut -f 3 -d ' ' | selecta | xargs -o vim"
+
+check_virtualenv() {
+    env=""
+    if [ -r .venv ]; then
+        env=$(cat .venv)
+    fi
+
+    if [ -d env ] && [ -r env/bin/activate ]; then
+        env="env"
+    fi
+
+    if [ ! -z "$env" ]; then
+        if [ "$env" != "${VIRTUAL_ENV##*/}" ]; then
+            echo "Found .venv in directory. Activating ${env}"
+            source $env/bin/activate
+        fi
+    fi
+}
+venv_cd () {
+    builtin cd "$@" && check_virtualenv
+}
+# Call check_virtualenv in case opening directly into a directory (e.g
+# when opening a new tab in Terminal.app).
+check_virtualenv
+
+alias cd="venv_cd"
+alias mejira='jira-cli --search-jql="project=MYB AND status in (Dev, Test) AND assignee in (currentUser())"'
+alias meji='jira-cli --search-jql="project=MYB AND status in (Dev, Test) AND assignee in (currentUser())" --format="#%key — %summary"'
+alias mj='meji | selecta | tr -d " " | cut -f 1 -d —'
 
 #set -o vi
 fortune proverbaro | ponysay -r GROUP=mane -r GROUP=royal -r NAME=Derpy -b unicode
