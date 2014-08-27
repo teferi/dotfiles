@@ -41,10 +41,10 @@ filetype plugin indent on
 
 " When editing a file, always jump to the last known cursor position.
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-au BufRead,BufNewFile *.go set filetype=go
+autocmd BufRead,BufNewFile *.go set filetype=go
 
 " nginx settings
-au BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/* if &ft == '' | setfiletype nginx | endif
+autocmd BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/* if &ft == '' | setfiletype nginx | endif
 
 autocmd FileType ruby set ts=2 sts=2 sw=2
 autocmd FileType html set ts=2 sts=2 sw=2
@@ -55,8 +55,10 @@ command RTW :%s/\s\+$//e
 
 " also highlight them and some other stuff
 match Todo /\s\+$/
-au BufEnter *.py exec "set listchars=tab:\uBB\uBB"
-au BufEnter *.py set list
+autocmd BufEnter *.py exec "set listchars=tab:\uBB\uBB"
+autocmd BufEnter *.py set list
+highlight ColorColumn ctermbg=magenta
+autocmd BufEnter *.py call matchadd('ColorColumn', '\%121v', 100)
 
 " comment line, selection with Ctrl-N,Ctrl-N
 "au BufEnter *.py nnoremap  <C-N><C-N>    mn:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR>:noh<CR>`n
@@ -83,10 +85,6 @@ set textwidth=0
 set wildmenu
 set backspace=indent,eol,start
 
-"set colorcolumn=121
-highlight ColorColumn ctermbg=magenta
-call matchadd('ColorColumn', '\%121v', 100)
-
 set pastetoggle=<F2>
 "set nofoldenable
 "set foldmethod=indent
@@ -100,8 +98,6 @@ command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " ';' is the new ':'
 nnoremap  ;  :
-" not the other way round
-"nnoremap  :  ;
 
 if has('python')
 
@@ -154,22 +150,27 @@ set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-
-" call vundle#rc()
 NeoBundle 'gmarik/vundle'
 
+NeoBundle 'Lokaltog/powerline'
 NeoBundle 'Blackrush/vim-gocode'
+NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Syntastic'
 NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'bling/vim-airline'
+NeoBundle 'dhruvasagar/vim-table-mode'
+NeoBundle 'evanmiller/nginx-vim-syntax'
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'mileszs/ack.vim'
 NeoBundle 'rizzatti/dash.vim'
 NeoBundle 'rizzatti/funcoo.vim'
+NeoBundle 'tell-k/vim-autopep8'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'vim-scripts/django.vim'
 NeoBundle 'vitorgalvao/autoswap_mac'
-NeoBundle 'dhruvasagar/vim-table-mode'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'evanmiller/nginx-vim-syntax'
-NeoBundle 'tell-k/vim-autopep8'
+
+NeoBundle 'SirVer/ultisnips'
+NeoBundle 'honza/vim-snippets'
 
 call neobundle#end()
 
@@ -219,6 +220,11 @@ let g:ycm_confirm_extra_conf = 0
 let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
+
+"let g:ycm_server_keep_logfiles = 1
+"let g:ycm_server_log_level = 'debug'
+
 
 let g:jedi#auto_initialization = 0
 let g:jedi#popup_select_first = 0
@@ -227,3 +233,13 @@ let g:jedi#use_splits_not_buffers = "right"
 let g:table_mode_corner_corner = '+'
 
 let g:autopep8_max_line_length = 120
+
+let g:airline_theme='luna'
+let g:airline_powerline_fonts = 1
+
+let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsUsePythonVersion = 2
+inoremap <c-x><c-k> <c-x><c-k>
+
+set dictionary+=/usr/share/dict/words
+set laststatus=2
