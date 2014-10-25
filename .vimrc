@@ -23,10 +23,8 @@ map Q gq
 " that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
 
-" In many terminal emulators the mouse works just fine, thus enable it.
-if has('mouse')
-  set mouse=a
-endif
+set mouse+=a
+set ttymouse=xterm2
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -147,13 +145,15 @@ filetype off  " required!
 
 set runtimepath+=~/.vim/bundle/vundle/
 set runtimepath+=~/.vim/bundle/neobundle.vim/
+set runtimepath+=~/.vim/bundle/ultisnips/
+set runtimepath+=~/.vim/bundle/vim-snippets/
 call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle 'gmarik/vundle'
 
-NeoBundle 'Lokaltog/powerline'
 NeoBundle 'Blackrush/vim-gocode'
+NeoBundle 'Lokaltog/powerline'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Syntastic'
 NeoBundle 'Valloric/YouCompleteMe'
@@ -168,9 +168,12 @@ NeoBundle 'tell-k/vim-autopep8'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'vim-scripts/django.vim'
 NeoBundle 'vitorgalvao/autoswap_mac'
+NeoBundle 'wting/rust.vim'
 
 NeoBundle 'SirVer/ultisnips'
 NeoBundle 'honza/vim-snippets'
+
+" NeoBundle 'davidhalter/jedi-vim'
 
 call neobundle#end()
 
@@ -180,8 +183,6 @@ NeoBundleCheck
 set title titlestring=
 
 filetype plugin indent on     " required!
-
-call pathogen#infect()
 
 " nerdtree
 nmap <C-n> :NERDTreeToggle<CR>
@@ -216,15 +217,17 @@ let g:syntastic_javascript_checkers = ['jshint', 'jsl']
 
 let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_confirm_extra_conf = 0
-
 let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_strings = 1
 
-"let g:ycm_server_keep_logfiles = 1
-"let g:ycm_server_log_level = 'debug'
-
+let g:ycm_semantic_triggers =  {
+  \ 'python' : ['.', 'import ', 're!import [,\w ]+, '],
+  \ }
 
 let g:jedi#auto_initialization = 0
 let g:jedi#popup_select_first = 0
@@ -234,11 +237,19 @@ let g:table_mode_corner_corner = '+'
 
 let g:autopep8_max_line_length = 120
 
-let g:airline_theme='luna'
+let g:airline_theme = 'luna'
 let g:airline_powerline_fonts = 1
 
-let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsExpandTrigger = "<c-j>"
+let g:UltiSnipsJumpForwardTrigger = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-p>"
 let g:UltiSnipsUsePythonVersion = 2
+let g:UltiSnipsEditSplit = 'vertical'
+let g:UltiSnipsSnippetDirectories=["UltiSnips"]
+
+autocmd VimEnter UltiSnipsAddFiletypes django
+
+
 inoremap <c-x><c-k> <c-x><c-k>
 
 set dictionary+=/usr/share/dict/words
