@@ -4,7 +4,18 @@ set editing-mode vi
 set keymap vi-insert
 "\C-a": beginning-of-line
 "\C-e": end-of-line
+"\C-l": clear-screen
 "\e[A": history-search-backward
 "\e[B": history-search-forward
 "\e[1;2C": forward-word
 "\e[1;2D": backward-word
+"\C-l": yank-last-arg
+
+set input-meta on
+set output-meta on
+set convert-meta off
+
+set visible-stats on
+set skip-completed-text on
+set show-all-if-ambiguous on
+set completion-ignore-case on

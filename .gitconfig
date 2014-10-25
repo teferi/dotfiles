@@ -1,5 +1,8 @@
 [color]
     ui = auto
+	diff = auto
+	status = auto
+	branch = auto
 [core]
     excludesfile = /Users/teferi/.gitignore_global
 [difftool "sourcetree"]
