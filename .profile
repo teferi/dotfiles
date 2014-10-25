@@ -1,9 +1,7 @@
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
 alias d=ls
 alias ls='ls -G'
 alias ll='ls -la'
 export ARCHFLAGS='-arch i386 -arch x86_64'
-export PYTHONPATH="/usr/local/Cellar/pil/1.1.7/lib/python2.6/site-packages/:/Users/teferi/lib/:/Users/teferi/git/:$PYTHONPATH"
 
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
@@ -23,10 +21,6 @@ RUBIES=(~/.rvm/rubies/*)
 
 alias spython='/Library/Frameworks/Python.framework/Versions/2.7/bin/python'
 alias pythonsys='spython'
-# Setting PATH for Python 2.7
-# The orginal version is saved in .profile.pysave
-#PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
-#export PATH
 alias activate='. ./env/bin/activate'
 alias reactivate='deactivate && activate'
 
@@ -34,7 +28,6 @@ export LANG=ru_RU.UTF-8
 export LC_ALL=ru_RU.UTF-8
 export EDITOR=/usr/local/bin/vim
 
-#defaults write com.apple.dashboard mcx-disabled -boolean YES
 alias pg_restart="pg_ctl -D /usr/local/var/postgres/ restart"
 alias pg_stop="pg_ctl -m fast -D /usr/local/var/postgres/ stop"
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin:/usr/local/sbin:$PATH
@@ -42,20 +35,23 @@ export PATH=~/bin:$PATH
 export GOPATH=/Users/teferi/go
 export PATH=$PATH:$GOPATH/bin
 export GOMAXPROCS=8
+export JAVA_HOME=$(/usr/libexec/java_home)
+# to compile numpy
+export ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future
+
 
 
 alias clstc='./manage.py assets build --parse-templates && ./manage.py collectstatic --noinput && printf "\a"'
 alias gti=git
 
 function rmpyc {
-    d=${1:-'.'};
-    find $d -name '*pyc' -delete;
+    find ${1:-'.'} -name '*pyc' -delete
 }
 
 function pcs {
-    d=${1:-'.'};
-    pycscope -R -f .cscope.db $d
+    pycscope -R -f .cscope.db ${1:-'.'}
 }
+alias pycs=pcs
 
 function ack2vim {
     pattern=$1;
@@ -76,7 +72,7 @@ function srvrs {
     if [ -z "$(pidof redis-server)" ]
     then
         echo "Starting redis"
-        redis-server 1>/dev/null 2>&1 &
+        redis-server /usr/local/etc/redis.conf 1>/dev/null 2>&1 &
     fi
     echo "Starting pg"
     pg_restart -s -l /tmp/pg_log.log
@@ -129,5 +125,4 @@ alias mejira='jira-cli --search-jql="project=MYB AND status in (Dev, Test) AND a
 alias meji='jira-cli --search-jql="project=MYB AND status in (Dev, Test) AND assignee in (currentUser())" --format="#%key — %summary"'
 alias mj='meji | selecta | tr -d " " | cut -f 1 -d —'
 
-#set -o vi
-fortune proverbaro | ponysay -r GROUP=mane -r GROUP=royal -r NAME=Derpy -b unicode
+fortune proverbaro | ponysay -r GROUP=mane -r NAME=djpon3 -r NAME=octavia -r NAME=Derpy -b unicode
