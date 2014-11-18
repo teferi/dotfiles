@@ -7,8 +7,12 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
 fi
 
-if [ -f "$HOME/etc/.bash_completion.sh" ]; then
-    . "$HOME/etc/.bash_completion.sh"
+if [ -f "$HOME/.bash_completion.sh" ]; then
+    . "$HOME/.bash_completion.sh"
+fi
+
+if [ -f "$HOME/.git-completion.bash " ]; then
+    . "$HOME/.git-completion.bash"
 fi
 
 alias xgettext=/usr/bin/xgettext.pl
@@ -80,7 +84,6 @@ function srvrs {
     printf "\a"
 }
 
-. ~/.git-completion.bash
 
 parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[\1]/'
