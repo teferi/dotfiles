@@ -106,11 +106,12 @@ check_virtualenv() {
         env="env"
     fi
 
-    if [ ! -z "$env" ]; then
-        if [ "$env" != "${VIRTUAL_ENV##*/}" ]; then
-            echo "Found .venv in directory. Activating ${env}"
-            source $env/bin/activate
+    if [ "$env" ]; then
+        if [ "$VIRTUAL_ENV" ]; then
+            deactivate
         fi
+        echo "Activating virtualenv '${env}'"
+        source $env/bin/activate
     fi
 }
 venv_cd () {
