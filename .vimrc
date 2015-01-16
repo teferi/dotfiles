@@ -11,7 +11,7 @@ else
   set backup " keep a backup file
 endif
 
-set history=100
+set history=1000
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
 set incsearch " do incremental searching
@@ -23,7 +23,7 @@ map Q gq
 " that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
 
-set mouse+=a
+set mouse=a
 set ttymouse=xterm2
 
 " Switch syntax highlighting on, when the terminal has colors
@@ -53,8 +53,8 @@ command RTW :%s/\s\+$//e
 
 " also highlight them and some other stuff
 match Todo /\s\+$/
-autocmd BufEnter *.py exec "set listchars=tab:\uBB\uBB"
 autocmd BufEnter *.py set list
+autocmd BufEnter *.py exec "set listchars=tab:\uBB\uBB"
 highlight ColorColumn ctermbg=magenta
 autocmd BufEnter *.py call matchadd('ColorColumn', '\%121v', 100)
 
@@ -69,6 +69,7 @@ autocmd BufEnter *.py call matchadd('ColorColumn', '\%121v', 100)
 "au BufEnter *.py vnoremap  <C-N>n     mn:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR>gv:s/#\n/\r/ge<CR>:noh<CR>gv`n
 
 set autoindent
+set copyindent
 set autoread
 set expandtab
 set smarttab
@@ -152,16 +153,26 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle 'gmarik/vundle'
 
+" trinity plugin 
+NeoBundle 'wesleyche/Trinity'
+NeoBundle 'vim-scripts/SrcExpl'
+NeoBundle 'vim-scripts/taglist.vim'
+
+NeoBundle 'nvie/vim-togglemouse'
+
 NeoBundle 'Blackrush/vim-gocode'
 NeoBundle 'Lokaltog/powerline'
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'SirVer/ultisnips'
 NeoBundle 'Syntastic'
 NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'dhruvasagar/vim-table-mode'
 NeoBundle 'evanmiller/nginx-vim-syntax'
+NeoBundle 'honza/vim-snippets'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mileszs/ack.vim'
+" NeoBundle 'python-rope/ropevim.git'
 NeoBundle 'rizzatti/dash.vim'
 NeoBundle 'rizzatti/funcoo.vim'
 NeoBundle 'tell-k/vim-autopep8'
@@ -170,17 +181,11 @@ NeoBundle 'vim-scripts/django.vim'
 NeoBundle 'vitorgalvao/autoswap_mac'
 NeoBundle 'wting/rust.vim'
 
-NeoBundle 'SirVer/ultisnips'
-NeoBundle 'honza/vim-snippets'
-
-" NeoBundle 'davidhalter/jedi-vim'
-
 call neobundle#end()
 
 NeoBundleCheck
 
-" rewrite module to make it work
-set title titlestring=
+set title
 
 filetype plugin indent on     " required!
 
@@ -194,6 +199,8 @@ if filereadable('.cscope.db')
     cs add .cscope.db
 endif
 
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 "nmap <C-t> :tabnew<CR>
 nmap <C-d> :Dash!<CR>
@@ -208,12 +215,17 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_mode_map = { 'mode': 'active',
                            \  'active_filetypes': ['python', 'c', 'js'],
                            \ 'passive_filetypes': ['html'] }
-let g:syntastic_c_checkers = ['gcc', 'splint', 'ycm']
+let g:syntastic_c_checkers = ['gcc', 'ycm']
+let g:syntastic_c_compiler_options = '-std=gnu11 -Wall'
+
 let g:syntastic_cpp_compiler_options = '-std=c++0x'
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_auto_refresh_includes = 1
 
 let g:syntastic_javascript_checkers = ['jshint', 'jsl']
+let g:syntastic_sh_shellcheck_args = ['--exclude=SC2139']
+let g:syntastic_aggregate_errors = 1
+
 
 let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_confirm_extra_conf = 0
@@ -246,6 +258,14 @@ let g:UltiSnipsJumpBackwardTrigger = "<c-p>"
 let g:UltiSnipsUsePythonVersion = 2
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsSnippetDirectories=["UltiSnips"]
+
+let ropevim_extended_complete = 1
+let ropevim_vim_completion = 1
+let ropevim_guess_project = 1
+let ropevim_enable_autoimport = 1
+
+nnoremap <c-i> :RopeAutoImport<CR>
+inoremap <c-i> <esc>:RopeAutoImport<CR>
 
 autocmd VimEnter UltiSnipsAddFiletypes django
 

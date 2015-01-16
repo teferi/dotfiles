@@ -1,10 +1,11 @@
+#!/usr/bin/env bash
 alias d=ls
 alias ls='ls -G'
 alias ll='ls -la'
 export ARCHFLAGS='-arch i386 -arch x86_64'
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
+if [ -f "$(brew --prefix)"/etc/bash_completion ]; then
+    . "$(brew --prefix)"/etc/bash_completion
 fi
 
 if [ -f "$HOME/.bash_completion.sh" ]; then
@@ -15,16 +16,13 @@ if [ -f "$HOME/.git-completion.bash " ]; then
     . "$HOME/.git-completion.bash"
 fi
 
+alias vless=/usr/local/share/vim/vim74/macros/less.sh
 alias xgettext=/usr/bin/xgettext.pl
 alias mp='mplayer -forceidx'
-
 alias ctop='top -o cpu'
 alias mtop='top -o vsize'
 alias git-pep8='git status -s | grep -v tests | cut -f 3 -d " " | xargs pep8 --max-line-length=120'
-RUBIES=(~/.rvm/rubies/*)
 
-alias spython='/Library/Frameworks/Python.framework/Versions/2.7/bin/python'
-alias pythonsys='spython'
 alias activate='. ./env/bin/activate'
 alias reactivate='deactivate && activate'
 
@@ -32,16 +30,19 @@ export LANG=ru_RU.UTF-8
 export LC_ALL=ru_RU.UTF-8
 export EDITOR=/usr/local/bin/vim
 
-alias pg_restart="pg_ctl -D /usr/local/var/postgres/ restart"
+alias pg_restart="pg_ctl -D /usr/local/var/postgres/ restart -p /usr/local/opt/postgresql-9.4/bin/postgres"
 alias pg_stop="pg_ctl -m fast -D /usr/local/var/postgres/ stop"
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin:/usr/local/sbin:$PATH
-export PATH=~/bin:$PATH
-export GOPATH=/Users/teferi/go
-export PATH=$PATH:$GOPATH/bin
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin:/usr/local/sbin:$PATH
+PATH=~/bin:$PATH
+PATH=/usr/local/opt/postgresql-9.4/bin:$PATH
+export GOPATH=$HOME/go
+PATH=$PATH:$GOPATH/bin
+export PATH
 export GOMAXPROCS=8
-export JAVA_HOME=$(/usr/libexec/java_home)
+export JAVA_HOME="$(/usr/libexec/java_home)"
 # to compile numpy
-export ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future
+# export ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future
+export CFLAGS="-std=gnu11 -Wall -g"
 
 
 
@@ -49,23 +50,23 @@ alias clstc='./manage.py assets build --parse-templates && ./manage.py collectst
 alias gti=git
 
 function rmpyc {
-    find ${1:-'.'} -name '*pyc' -delete
+    find "${1:-.}" -name '*pyc' -delete
 }
 
 function pcs {
-    pycscope -R -f .cscope.db ${1:-'.'}
+    pycscope -U -R -f .cscope.db "${1:-'.'}"
 }
 alias pycs=pcs
 
 function ack2vim {
-    pattern=$1;
-    directory=$2;
-    result=$(ack "$pattern" "$directory" --nogroup --output='+$.' -s | cut -f 1,3 -d ':' | tr ':' ' ');
-    echo $result;
+    pattern=$1
+    directory=$2
+    result="$(ack "$pattern" "$directory" --nogroup --output='+$.' -s | cut -f 1,3 -d ':' | tr ':' ' ')"
+    echo "$result";
 }
 
 function srvrs {
-    cwd=$(pwd)
+    cwd="$(pwd)"
     cd /tmp
 
     if [ -z "$(pidof nginx)" ]
@@ -80,7 +81,7 @@ function srvrs {
     fi
     echo "Starting pg"
     pg_restart -s -l /tmp/pg_log.log
-    cd $cwd
+    cd "$cwd"
     printf "\a"
 }
 
@@ -90,10 +91,10 @@ parse_git_branch() {
 }
 PS1='\[\e[1;34m\]\u \[\e[1;32m\]\W \[\e[1;33m\]$(parse_git_branch)\$\[\e[0m\] '
 
-alias localpip="pip install --index-url=file://"$LOCAL_PIP_REPO"/simple"
 export LOCAL_PIP_REPO=$HOME/.localpip/packages
+alias localpip="pip install --index-url=file://$LOCAL_PIP_REPO/simple"
 function pip_pip2pi() {
-    pip install "$@" && pip2pi $LOCAL_PIP_REPO "$@"
+    pip install "$@" && pip2pi "$LOCAL_PIP_REPO" "$@"
 }
 alias pi=pip_pip2pi
 
