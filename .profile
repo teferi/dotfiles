@@ -54,7 +54,7 @@ function rmpyc {
 }
 
 function pcs {
-    pycscope -U -R -f .cscope.db "${1:-'.'}"
+    pycscope -R -f .cscope.db "${1:-'.'}"
 }
 alias pycs=pcs
 
