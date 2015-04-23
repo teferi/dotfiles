@@ -1,90 +1,80 @@
-" Use Vim settings, rather than Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
 set nocompatible
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
 if has("vms")
-  set nobackup " do not keep a backup file, use versions instead
+  set nobackup
 else
-  set backup " keep a backup file
+  set backup
 endif
 
-set history=1000
+set history=10000
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
 set incsearch " do incremental searching
 
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo, so
-" that you can undo CTRL-U after inserting a line break.
-inoremap <C-U> <C-G>u<C-U>
-
-set mouse=a
+" do not enable mouse by default
+set mouse=
 set ttymouse=xterm2
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
-  set ignorecase
-  set smartcase
-endif
+syntax on
+set hlsearch
+
+" /foo matches all foo Foo FOO
+set ignorecase
+set nosmartcase
 
 filetype plugin indent on
 
 " When editing a file, always jump to the last known cursor position.
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+
+" additional filetypes
+autocmd BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/* if &ft == '' | setfiletype nginx | endif
 autocmd BufRead,BufNewFile *.go set filetype=go
 
-" nginx settings
-autocmd BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/* if &ft == '' | setfiletype nginx | endif
-
+" configs for filetypes
 autocmd FileType ruby set ts=2 sts=2 sw=2
 autocmd FileType html set ts=2 sts=2 sw=2
+autocmd FileType rst set tw=79
 
 " automatically remove trailing whitespaces
 autocmd BufWritePre *.py :%s/\s\+$//e
-command RTW :%s/\s\+$//e
+command! RTW :%s/\s\+$//e
 
 " also highlight them and some other stuff
 match Todo /\s\+$/
 autocmd BufEnter *.py set list
 autocmd BufEnter *.py exec "set listchars=tab:\uBB\uBB"
 highlight ColorColumn ctermbg=magenta
-autocmd BufEnter *.py call matchadd('ColorColumn', '\%121v', 100)
+autocmd BufEnter *.py call matchadd('ColorColumn', '\%79v', 100)
+autocmd BufEnter *.rst call matchadd('ColorColumn', '\%79v', 100)
 
-" comment line, selection with Ctrl-N,Ctrl-N
-"au BufEnter *.py nnoremap  <C-N><C-N>    mn:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR>:noh<CR>`n
-"au BufEnter *.py inoremap  <C-N><C-N>    <C-O>mn<C-O>:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR><C-O>:noh<CR><C-O>`n
-"au BufEnter *.py vnoremap  <C-N><C-N>    mn:s/^\(\s*\)#*\(.*\)/\1#\2/ge<CR>:noh<CR>gv`n
+" read/write files automatically
+set autoread
+set autowrite
 
-" uncomment line, selection with Ctrl-N,N
-"au BufEnter *.py nnoremap  <C-N>n     mn:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR>:s/^#$//ge<CR>:noh<CR>`n
-"au BufEnter *.py inoremap  <C-N>n     <C-O>mn<C-O>:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR><C-O>:s/^#$//ge<CR><C-O>:noh<CR><C-O>`n
-"au BufEnter *.py vnoremap  <C-N>n     mn:s/^\(\s*\)#\([^ ]\)/\1\2/ge<CR>gv:s/#\n/\r/ge<CR>:noh<CR>gv`n
-
+" your typical pythonc tabs
 set autoindent
 set copyindent
-set autoread
 set expandtab
 set smarttab
 set tabstop=4 shiftwidth=4 softtabstop=4
-set whichwrap=b,[,],<,>
-set virtualedit=onemore
 set nowrap
+
+set dictionary+=/usr/share/dict/words
+set laststatus=2
+set title
+set virtualedit=onemore
 set backupdir=~/.vimbackup
 set splitright
 set textwidth=0
 " make command completion spawn a menu
 set wildmenu
+" better line navigation
 set backspace=indent,eol,start
+set whichwrap=b,[,],<,>
 
 set pastetoggle=<F2>
+" folding requires some more work
 "set nofoldenable
 "set foldmethod=indent
 "set foldlevel=1
@@ -93,9 +83,9 @@ set pastetoggle=<F2>
 "vnoremap <space> zf
 
 " set W to be 'sudo w'
-command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
-" ';' is the new ':'
+" ';' is the new ':', I don't really use it though
 nnoremap  ;  :
 
 if has('python')
@@ -107,14 +97,20 @@ try:
     import os.path
     import sys
 
-    virtualenv = os.environ.get('VIRTUAL_ENV')
-    if virtualenv and os.path.isdir(virtualenv):
-        activate_this = os.path.join(virtualenv, 'bin', 'activate_this.py')
+    def act_venv(venv):
+        activate_this = os.path.join(venv, 'bin', 'activate_this.py')
         if os.path.exists(activate_this):
             execfile(activate_this, dict(__file__=activate_this))
-            sys.path.append(os.path.join(virtualenv, '../'))
-            os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-            #print "activated '{0}' virtualenv".format(virtualenv)
+            sys.path.append(os.path.join(venv, '../'))
+
+    virtualenv = os.environ.get('VIRTUAL_ENV')
+    if virtualenv and os.path.isdir(virtualenv):
+        act_venv(virtualenv)
+    else:
+        for tox in ['pep8', 'venv', 'py27']:
+            if os.path.isdir(os.path.join('.tox/', tox)):
+                act_venv(os.path.join('.tox/', tox))
+                break
 except:
     pass
 EOPYTHON
@@ -151,41 +147,44 @@ set runtimepath+=~/.vim/bundle/vim-snippets/
 call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-NeoBundle 'gmarik/vundle'
 
-" trinity plugin 
-NeoBundle 'wesleyche/Trinity'
-NeoBundle 'vim-scripts/SrcExpl'
-NeoBundle 'vim-scripts/taglist.vim'
-
-NeoBundle 'nvie/vim-togglemouse'
-
-NeoBundle 'Blackrush/vim-gocode'
-NeoBundle 'Lokaltog/powerline'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'SirVer/ultisnips'
-NeoBundle 'Syntastic'
+" important and everyday use
 NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'nvie/vim-togglemouse'
+NeoBundle 'Lokaltog/powerline'
+NeoBundle 'SirVer/ultisnips'
+NeoBundle 'scrooloose/syntastic'
 NeoBundle 'bling/vim-airline'
+NeoBundle 'tpope/vim-fugitive'
+
+" secondary
+NeoBundle 'Blackrush/vim-gocode'
 NeoBundle 'dhruvasagar/vim-table-mode'
-NeoBundle 'evanmiller/nginx-vim-syntax'
+NeoBundle 'gmarik/vundle'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mileszs/ack.vim'
-" NeoBundle 'python-rope/ropevim.git'
+NeoBundle 'vitorgalvao/autoswap_mac'
+
+" should look into
+NeoBundle 'idanarye/vim-merginal'
+NeoBundle 'Shougo/unite.vim'
+
+" maybe delete?
 NeoBundle 'rizzatti/dash.vim'
 NeoBundle 'rizzatti/funcoo.vim'
-NeoBundle 'tell-k/vim-autopep8'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'vim-scripts/django.vim'
-NeoBundle 'vitorgalvao/autoswap_mac'
+
+" color and syntax
+NeoBundle 'evanmiller/nginx-vim-syntax'
 NeoBundle 'wting/rust.vim'
+NeoBundle 'flazz/vim-colorschemes'
+NeoBundle 'endel/vim-github-colorscheme'
+NeoBundle 'vim-scripts/CycleColor'
 
 call neobundle#end()
 
 NeoBundleCheck
-
-set title
 
 filetype plugin indent on     " required!
 
@@ -199,33 +198,35 @@ if filereadable('.cscope.db')
     cs add .cscope.db
 endif
 
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>ev :vsplit $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
-"nmap <C-t> :tabnew<CR>
+" I stopped using tabs really
+" nmap <C-t> :tabnew<CR>
 nmap <C-d> :Dash!<CR>
-"nmap <silent> <C-d> <Plug>DashSearch
-"nmap <silent> <leader>d <Plug>DashSearch
-"nmap <C-b> :CommandT<CR>
-"nmap <C-m> :tabnew<CR>:CommandT<CR>
-command JJ :set filetype=htmljinja
+
+command! JJ :set filetype=htmljinja
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_mode_map = { 'mode': 'active',
                            \  'active_filetypes': ['python', 'c', 'js'],
                            \ 'passive_filetypes': ['html'] }
-let g:syntastic_c_checkers = ['gcc', 'ycm']
-let g:syntastic_c_compiler_options = '-std=gnu11 -Wall'
+" need to edit pylint config before it is usable
+" let g:syntastic_python_checkers = ['pep8', 'flake8', 'pylint']
+let g:syntastic_python_checkers = ['pep8', 'flake8']
 
-let g:syntastic_cpp_compiler_options = '-std=c++0x'
+let g:syntastic_c_checkers = ['gcc', 'make', 'ycm']
+let g:syntastic_c_compiler_options = '-Wall'
+
+let g:syntastic_cpp_compiler_options = '-std=gnu++14'
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_auto_refresh_includes = 1
 
 let g:syntastic_javascript_checkers = ['jshint', 'jsl']
-let g:syntastic_sh_shellcheck_args = ['--exclude=SC2139']
+" expands when defined, not when used.
+" let g:syntastic_sh_shellcheck_args = ['--exclude=SC2139']
 let g:syntastic_aggregate_errors = 1
-
 
 let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_confirm_extra_conf = 0
@@ -237,19 +238,19 @@ let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
 
+" trigger semantic completion for imports
 let g:ycm_semantic_triggers =  {
   \ 'python' : ['.', 'import ', 're!import [,\w ]+, '],
   \ }
 
-let g:jedi#auto_initialization = 0
-let g:jedi#popup_select_first = 0
-let g:jedi#use_splits_not_buffers = "right"
+" let g:jedi#auto_initialization = 0
+" let g:jedi#popup_select_first = 0
+" let g:jedi#use_splits_not_buffers = "right"
 
+" I need to remember how to use it =(
 let g:table_mode_corner_corner = '+'
 
-let g:autopep8_max_line_length = 120
-
-let g:airline_theme = 'luna'
+let g:airline_theme = 'molokaitef'
 let g:airline_powerline_fonts = 1
 
 let g:UltiSnipsExpandTrigger = "<c-j>"
@@ -259,18 +260,12 @@ let g:UltiSnipsUsePythonVersion = 2
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 
-let ropevim_extended_complete = 1
-let ropevim_vim_completion = 1
-let ropevim_guess_project = 1
-let ropevim_enable_autoimport = 1
-
-nnoremap <c-i> :RopeAutoImport<CR>
-inoremap <c-i> <esc>:RopeAutoImport<CR>
-
 autocmd VimEnter UltiSnipsAddFiletypes django
 
+" github color scheme is nice
+set t_Co=256
 
-inoremap <c-x><c-k> <c-x><c-k>
-
-set dictionary+=/usr/share/dict/words
-set laststatus=2
+if &diff
+    colorscheme github-tef
+endif
+au FilterWritePre * if &diff | colorscheme github-tef | endif
