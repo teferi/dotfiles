@@ -1,7 +1,7 @@
 [dashboard]
 title = Murano
 description = Murano Review Inbox
-foreach = (project:^stackforge/.*murano.*) status:open NOT label:Workflow<=-1 NOT label:Code-Review<=-2
+foreach = (project:^.*/.*murano.*) status:open NOT label:Workflow<=-1 NOT label:Code-Review<=-2
 
 [section "My Patches"]
 query = owner:self
