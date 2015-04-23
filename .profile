@@ -8,9 +8,11 @@ if [ -f "$(brew --prefix)"/etc/bash_completion ]; then
     . "$(brew --prefix)"/etc/bash_completion
 fi
 
-if [ -f "$HOME/.bash_completion.sh" ]; then
-    . "$HOME/.bash_completion.sh"
-fi
+for file in $HOME/.bash_completions/*.sh; do
+    if [ -f "$file" ]; then
+        . "$file"
+    fi
+done
 
 if [ -f "$HOME/.git-completion.bash " ]; then
     . "$HOME/.git-completion.bash"
@@ -39,7 +41,6 @@ export GOPATH=$HOME/go
 PATH=$PATH:$GOPATH/bin
 export PATH
 export GOMAXPROCS=8
-export JAVA_HOME="$(/usr/libexec/java_home)"
 # to compile numpy
 # export ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future
 export CFLAGS="-std=gnu11 -Wall -g"
@@ -50,11 +51,11 @@ alias clstc='./manage.py assets build --parse-templates && ./manage.py collectst
 alias gti=git
 
 function rmpyc {
-    find "${1:-.}" -name '*pyc' -delete
+    find "${@:-.}" -name '*pyc' -delete
 }
 
 function pcs {
-    pycscope -R -f .cscope.db "${1:-'.'}"
+    pycscope -R -f .cscope.db "${@:-'.'}"
 }
 alias pycs=pcs
 
@@ -126,8 +127,32 @@ venv_cd () {
 check_virtualenv
 
 alias cd="venv_cd"
-alias mejira='jira-cli --search-jql="project=MYB AND status in (Dev, Test) AND assignee in (currentUser())"'
-alias meji='jira-cli --search-jql="project=MYB AND status in (Dev, Test) AND assignee in (currentUser())" --format="#%key — %summary"'
+alias mejira='jira-cli view --search-jql="project=MYB AND status in (Dev, Test) AND assignee in (currentUser())"'
+alias meji='jira-cli view --search-jql="project=MYB AND status in (Dev, Test) AND assignee in (currentUser())" --format="#%key — %summary"'
 alias mj='meji | selecta | tr -d " " | cut -f 1 -d —'
+
+alias stripcol="perl -pe 's/\e\[?.*?[\@-~]//g'"
+alias select1="stripcol | cut -f 1 -d ' '"
+gitr(){
+    selecta_args="${2:-}"
+    if [ "$selecta_args" ]; then
+        selecta_args="-s $selecta_args"
+    fi
+    git review "$1" "$(git review -l | selecta "$selecta_args" | select1)"
+}
+gitrd() {
+    gitr "-d" "$1"
+}
+gitrx() {
+    gitr "-x" "$1"
+}
+toxenv() {
+    . ".tox/$1/bin/activate"
+}
+
+# MURANO
+alias murano-api="tox -e venv -- murano-api --config-file ./etc/murano/murano.conf"
+alias murano-engine="tox -e venv -- murano-engine --config-file ./etc/murano/murano.conf"
+alias murano-dash="tox -e venv -- python manage.py collectstatic --noinput && tox -e venv -- python manage.py runserver"
 
 fortune proverbaro | ponysay -r GROUP=mane -r NAME=djpon3 -r NAME=octavia -r NAME=Derpy -b unicode
