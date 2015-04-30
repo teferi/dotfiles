@@ -157,6 +157,7 @@ NeoBundle 'SirVer/ultisnips'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'mileszs/ack.vim'
 
 " secondary
 NeoBundle 'Blackrush/vim-gocode'
@@ -164,16 +165,12 @@ NeoBundle 'dhruvasagar/vim-table-mode'
 NeoBundle 'gmarik/vundle'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'mileszs/ack.vim'
 NeoBundle 'vitorgalvao/autoswap_mac'
 
 " should look into
 NeoBundle 'idanarye/vim-merginal'
 NeoBundle 'Shougo/unite.vim'
-
-" maybe delete?
-NeoBundle 'rizzatti/dash.vim'
-NeoBundle 'rizzatti/funcoo.vim'
+NeoBundle 'davidhalter/jedi-vim'
 
 " color and syntax
 NeoBundle 'evanmiller/nginx-vim-syntax'
@@ -203,7 +200,6 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 " I stopped using tabs really
 " nmap <C-t> :tabnew<CR>
-nmap <C-d> :Dash!<CR>
 
 command! JJ :set filetype=htmljinja
 
@@ -243,9 +239,22 @@ let g:ycm_semantic_triggers =  {
   \ 'python' : ['.', 'import ', 're!import [,\w ]+, '],
   \ }
 
-" let g:jedi#auto_initialization = 0
-" let g:jedi#popup_select_first = 0
-" let g:jedi#use_splits_not_buffers = "right"
+" jedi-vim
+let g:jedi#auto_initialization = 1
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#popup_on_dot = 0
+let g:jedi#popup_select_first = 0
+let g:jedi#completions_enabled = 0
+let g:jedi#completions_command = ""
+let g:jedi#show_call_signatures = 0
+
+let g:jedi#goto_assignments_command = "<leader>da"
+let g:jedi#goto_definitions_command = "<leader>dd"
+let g:jedi#documentation_command = "<leader>dk"
+let g:jedi#usages_command = "<leader>du"
+let g:jedi#rename_command = "<leader>dr"
+let g:jedi#use_splits_not_buffers = "right"
+let g:jedi#use_tabs_not_buffers = 0
 
 " I need to remember how to use it =(
 let g:table_mode_corner_corner = '+'
@@ -261,6 +270,16 @@ let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 
 autocmd VimEnter UltiSnipsAddFiletypes django
+
+" use ag if available
+if executable('ag')
+    let g:ackprg = 'ag --vimgrep'
+endif
+
+let g:ackhighlight = 1
+let g:ackpreview = 1
+let g:ackautoclose = 1
+" let g:ack_autofold_results = 1
 
 " github color scheme is nice
 set t_Co=256
