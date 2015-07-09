@@ -36,15 +36,20 @@ autocmd FileType ruby set ts=2 sts=2 sw=2
 autocmd FileType html set ts=2 sts=2 sw=2
 autocmd FileType rst set tw=79
 
-" automatically remove trailing whitespaces
-autocmd BufWritePre *.py :%s/\s\+$//e
+" Remove Trailing Whitespaces
 command! RTW :%s/\s\+$//e
 
-" also highlight them and some other stuff
+" automatically RTW for py/rst. would result in -1 anyway
+autocmd BufWritePre *.py :RTW
+autocmd BufWritePre *.rst :RTW
+
+" also highlight them and tabs
 match Todo /\s\+$/
 autocmd BufEnter *.py set list
 autocmd BufEnter *.py exec "set listchars=tab:\uBB\uBB"
 highlight ColorColumn ctermbg=magenta
+
+" highlight 79th character where sensible.
 autocmd BufEnter *.py call matchadd('ColorColumn', '\%79v', 100)
 autocmd BufEnter *.rst call matchadd('ColorColumn', '\%79v', 100)
 
@@ -60,11 +65,16 @@ set smarttab
 set tabstop=4 shiftwidth=4 softtabstop=4
 set nowrap
 
+set undodir=~/.vim/undodir
+set undofile
+set undolevels=10000
+set undoreload=10000
+
 set dictionary+=/usr/share/dict/words
 set laststatus=2
 set title
 set virtualedit=onemore
-set backupdir=~/.vimbackup
+set backupdir=~/.vim/backup
 set splitright
 set textwidth=0
 " make command completion spawn a menu
@@ -85,8 +95,32 @@ set pastetoggle=<F2>
 " set W to be 'sudo w'
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
+" Wq is ok
+command! Wq wq
+
 " ';' is the new ':', I don't really use it though
 nnoremap  ;  :
+
+" redo in just 2 btns
+noremap rr <C-r>
+
+" I really don't like my cursor being moved
+" noremap a i
+
+" And stay there
+" inoremap <silent> <Esc> <C-O>:stopinsert<CR>
+" inoremap <silent> <Esc> <Esc>`^
+" inoremap ff <Esc>l
+
+" set timeoutlen=500
+
+let CursorColumnI = 0 "the cursor column position in INSERT
+autocmd InsertEnter * let CursorColumnI = col('.')
+autocmd CursorMovedI * let CursorColumnI = col('.')
+autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
+
+
+
 
 if has('python')
 
@@ -158,6 +192,7 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'mileszs/ack.vim'
+NeoBundle 'davidhalter/jedi-vim'
 
 " secondary
 NeoBundle 'Blackrush/vim-gocode'
@@ -168,9 +203,10 @@ NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'vitorgalvao/autoswap_mac'
 
 " should look into
+NeoBundle 'terryma/vim-expand-region'
 NeoBundle 'idanarye/vim-merginal'
 NeoBundle 'Shougo/unite.vim'
-NeoBundle 'davidhalter/jedi-vim'
+NeoBundle 'Rykka/InstantRst'
 
 " color and syntax
 NeoBundle 'evanmiller/nginx-vim-syntax'
@@ -189,6 +225,10 @@ filetype plugin indent on     " required!
 nmap <C-n> :NERDTreeToggle<CR>
 " open tag definition in a vsplit
 nmap <C-p> :vsplit <CR>:exec("tag ".expand("<cword>"))<CR>
+
+" region expanding
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
 
 set tags=.tags
 if filereadable('.cscope.db')
@@ -219,7 +259,7 @@ let g:syntastic_cpp_compiler_options = '-std=gnu++14'
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_auto_refresh_includes = 1
 
-let g:syntastic_javascript_checkers = ['jshint', 'jsl']
+let g:syntastic_javascript_checkers = ['jscs', 'jshint', 'eslint']
 " expands when defined, not when used.
 " let g:syntastic_sh_shellcheck_args = ['--exclude=SC2139']
 let g:syntastic_aggregate_errors = 1
@@ -269,6 +309,8 @@ let g:UltiSnipsUsePythonVersion = 2
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 
+let g:ycm_server_keep_logfiles=1
+
 autocmd VimEnter UltiSnipsAddFiletypes django
 
 " use ag if available
@@ -283,6 +325,25 @@ let g:ackautoclose = 1
 
 " github color scheme is nice
 set t_Co=256
+
+" csope
+nmap <leader>cs :vert scs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>cg :vert scs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>cc :vert scs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>ct :vert scs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>ce :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>cf :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader>ci :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nmap <leader>cd :vert scs find d <C-R>=expand("<cword>")<CR><CR>
+
+nmap <C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nmap <C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
 
 if &diff
     colorscheme github-tef
