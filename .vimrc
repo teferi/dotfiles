@@ -32,16 +32,16 @@ autocmd BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/* if &ft == '' | s
 autocmd BufRead,BufNewFile *.go set filetype=go
 
 " configs for filetypes
-autocmd FileType ruby set ts=2 sts=2 sw=2
-autocmd FileType html set ts=2 sts=2 sw=2
-autocmd FileType rst set tw=79
+autocmd FileType html setlocal ts=2 sts=2 sw=2
+autocmd FileType rst setlocal tw=79
+autocmd FileType ruby setlocal ts=2 sts=2 sw=2
+autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
 
 " Remove Trailing Whitespaces
 command! RTW :%s/\s\+$//e
 
-" automatically RTW for py/rst. would result in -1 anyway
-autocmd BufWritePre *.py :RTW
-autocmd BufWritePre *.rst :RTW
+" automatically RTW
+autocmd BufWritePre * :RTW
 
 " also highlight them and tabs
 match Todo /\s\+$/
@@ -259,7 +259,8 @@ let g:syntastic_cpp_compiler_options = '-std=gnu++14'
 let g:syntastic_cpp_check_header = 1
 let g:syntastic_cpp_auto_refresh_includes = 1
 
-let g:syntastic_javascript_checkers = ['jscs', 'jshint', 'eslint']
+" let g:syntastic_javascript_checkers = ['jscs', 'jshint', 'eslint']
+let g:syntastic_javascript_checkers = ['eslint']
 " expands when defined, not when used.
 " let g:syntastic_sh_shellcheck_args = ['--exclude=SC2139']
 let g:syntastic_aggregate_errors = 1
