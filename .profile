@@ -24,6 +24,8 @@ alias mp='mplayer -forceidx'
 alias ctop='top -o cpu'
 alias mtop='top -o vsize'
 alias git-pep8='git status -s | grep -v tests | cut -f 3 -d " " | xargs pep8 --max-line-length=120'
+alias gti='git'
+alias buu='brew update && brew upgrade --all'
 
 alias activate='. ./env/bin/activate'
 alias reactivate='deactivate && activate'
@@ -93,7 +95,7 @@ parse_git_branch() {
 PS1='\[\e[1;34m\]\u \[\e[1;32m\]\W \[\e[1;33m\]$(parse_git_branch)\$\[\e[0m\] '
 
 export LOCAL_PIP_REPO=$HOME/.localpip/packages
-alias localpip="pip install --index-url=file://$LOCAL_PIP_REPO/simple"
+alias localpip='pip install --index-url=file://$LOCAL_PIP_REPO/simple'
 function pip_pip2pi() {
     pip install "$@" && pip2pi "$LOCAL_PIP_REPO" "$@"
 }
@@ -146,13 +148,21 @@ gitrd() {
 gitrx() {
     gitr "-x" "$1"
 }
+alias murc="python-muranoclient python muranoclient/shell.py"
 toxenv() {
     . ".tox/$1/bin/activate"
 }
 
+# defaults write com.apple.dock scroll-to-open -bool TRUE; killall Dock
+
 # MURANO
 alias murano-api="tox -e venv -- murano-api --config-file ./etc/murano/murano.conf"
 alias murano-engine="tox -e venv -- murano-engine --config-file ./etc/murano/murano.conf"
+alias murano-syncdb="tox -e venv -- python manage.py syncdb --noinput"
 alias murano-dash="tox -e venv -- python manage.py collectstatic --noinput && tox -e venv -- python manage.py runserver"
+
+tenv() {
+  source ".tox/${1:-venv}/bin/activate"
+}
 
 fortune proverbaro | ponysay -r GROUP=mane -r NAME=djpon3 -r NAME=octavia -r NAME=Derpy -b unicode
