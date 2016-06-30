@@ -1,7 +1,7 @@
 [dashboard]
 title = Murano
 description = Murano Review Inbox
-foreach = (project:^.*/.*murano.* OR project:openstack/yaql)  status:open NOT label:Workflow<=-1 NOT label:Code-Review<=-2
+foreach = ((project:^.*/.*murano.* OR project:openstack/yaql) AND NOT project:openstack/ci-cd-pipeline-app-murano) NOT label:Workflow<=-1 NOT label:Code-Review<=-2 status:open
 
 [section "My Patches"]
 query = owner:self
@@ -16,16 +16,14 @@ query = NOT label:Code-Review<=2 NOT label:Verified<=-1 NOT owner:self
 query = label:Code-Review>=1 NOT label:Code-Review<=-1 AND NOT label:Verified<=-1 NOT owner:self NOT reviewer:self limit:50
 
 [section "Maybe Review?"]
-query = NOT owner:self NOT reviewer:self limit:50
-
-[section "Negative Feedback"]
-query = label:Code-Review<=-1 limit:50 NOT owner:self
+query = NOT owner:self NOT reviewer:self limit:25
 
 [section "My +1s"]
 query = label:Code-Review=1,self limit:25
 
 [section "Need final +2"]
-query = label:Code-Review>=2 NOT label:Code-Review<=-1 NOT owner:self NOT label:Verified<=-1 NOT reviewer:self limit:25
+query = label:Code-Review>=2 NOT label:Code-Review<=-1 NOT label:Verified<=-1 NOT label:Code-Review<=2,self reviewer:self NOT owner:self limit:25
 
 [section "My +2s"]
 query = label:Code-Review=2,self limit:25
+
