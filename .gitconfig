@@ -5,24 +5,32 @@
 	branch = auto
 [core]
     excludesfile = /Users/teferi/.gitignore_global
+    editor = vim
 [alias]
     lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --decorate=full --abbrev-commit --
     tefold = log --pretty=tefold --no-merges
     tef = log --pretty=tef --no-merges --date=relative
+    tefm = log --pretty=tef --date=relative
 
     monday = log --pretty=tef --no-merges --since='last friday' --date=relative
     wakeup = log --pretty=tef --no-merges @{yesterday}..HEAD --date=relative
-    upstream = log --pretty=tef --no-merges HEAD..@{u} --date=relative
-    pp = !git fetch && git upstream && git rebase @{u}
+    upstream = log --pretty=tef --no-merges HEAD..@{upstream} --date=relative
+    pp = !git fetch && git upstream && git rebase @{upstream}
     ppp = !git pp && git push
     srs = !git stash && git review && git stash pop
 
     ch = checkout
+    cp = cherry-pick
     co = commit
     st = status
     ss = show --stat
     s = show --stat
-    rhup = reset --hard @{u}
+    rhup = reset --hard @{upstream}
+    ccc = cherry-pick --continue
+
+    search = log --pretty=tef --source --all -G
+
+    when = !stat -f '%Sm' $(git rev-parse --show-toplevel)/.git/FETCH_HEAD
 
 [pretty]
     tefold = %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue(%aN)%Cgreen(%cr)%Creset
@@ -32,3 +40,5 @@
     rebase = true
 [push]
     default = current
+[commit]
+	template = /Users/teferi/.git-commit-template
