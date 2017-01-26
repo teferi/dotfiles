@@ -30,12 +30,16 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "norm
 " additional filetypes
 autocmd BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/* if &ft == '' | setfiletype nginx | endif
 autocmd BufRead,BufNewFile *.go set filetype=go
+autocmd BufRead,BufNewFile *.conf set filetype=dosini
+autocmd BufRead,BufNewFile *.inc set filetype=sh
 
 " configs for filetypes
 autocmd FileType html setlocal ts=2 sts=2 sw=2
-autocmd FileType rst setlocal tw=79
+autocmd FileType rst setlocal tw=79 spell
 autocmd FileType ruby setlocal ts=2 sts=2 sw=2
 autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
+autocmd FileType gitcommit setlocal spell
+
 
 " Remove Trailing Whitespaces
 command! RTW :%s/\s\+$//e
@@ -193,6 +197,9 @@ NeoBundle 'bling/vim-airline'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'davidhalter/jedi-vim'
+" NeoBundle 'rodjek/vim-puppet'
+NeoBundle 'IN3D/vim-raml'
+NeoBundle 'puppetlabs/puppet-syntax-vim'
 
 " secondary
 NeoBundle 'Blackrush/vim-gocode'
@@ -203,6 +210,7 @@ NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'vitorgalvao/autoswap_mac'
 
 " should look into
+NeoBundle 'sourcegraph/sourcegraph-vim'
 NeoBundle 'terryma/vim-expand-region'
 NeoBundle 'idanarye/vim-merginal'
 NeoBundle 'Shougo/unite.vim'
@@ -214,6 +222,11 @@ NeoBundle 'wting/rust.vim'
 NeoBundle 'flazz/vim-colorschemes'
 NeoBundle 'endel/vim-github-colorscheme'
 NeoBundle 'vim-scripts/CycleColor'
+
+NeoBundle 'Scuilion/gradle-syntastic-plugin'
+
+let g:syntastic_java_checkers=['javac']
+let g:syntastic_java_javac_config_file_enabled = 1
 
 call neobundle#end()
 
@@ -235,6 +248,7 @@ if filereadable('.cscope.db')
     cs add .cscope.db
 endif
 
+" edit/save & apply vimrc without exiting current window
 nmap <silent> <leader>ev :vsplit $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
@@ -242,6 +256,9 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 " nmap <C-t> :tabnew<CR>
 
 command! JJ :set filetype=htmljinja
+
+" automatically close loclist if I :wq a window with syntastic errors
+autocmd WinEnter * if &buftype ==# 'quickfix' && winnr('$') == 1 | quit | endif
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -261,9 +278,13 @@ let g:syntastic_cpp_auto_refresh_includes = 1
 
 " let g:syntastic_javascript_checkers = ['jscs', 'jshint', 'eslint']
 let g:syntastic_javascript_checkers = ['eslint']
+" let g:syntastic_rst_checkers = ['rstcheck']
 " expands when defined, not when used.
 " let g:syntastic_sh_shellcheck_args = ['--exclude=SC2139']
 let g:syntastic_aggregate_errors = 1
+let g:syntastic_enable_balloons = 1
+let g:syntastic_ignore_files = ['\m^/usr/local/', '\m\c\/.tox/']
+
 
 let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_confirm_extra_conf = 0
@@ -346,7 +367,7 @@ nmap <C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
 
-if &diff
-    colorscheme github-tef
-endif
-au FilterWritePre * if &diff | colorscheme github-tef | endif
+" if &diff
+"    colorscheme github-tef
+" endif
+" au FilterWritePre * if &diff | colorscheme github-tef | endif
