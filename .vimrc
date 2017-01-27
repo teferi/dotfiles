@@ -177,61 +177,50 @@ endif
 
 
 filetype off  " required!
-
-set runtimepath+=~/.vim/bundle/vundle/
-set runtimepath+=~/.vim/bundle/neobundle.vim/
+set runtimepath+=~/.vim/bundle/Vundle.vim/
 set runtimepath+=~/.vim/bundle/ultisnips/
 set runtimepath+=~/.vim/bundle/vim-snippets/
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
+call vundle#begin()
 
+Plugin 'VundleVim/Vundle.vim'
 
 " important and everyday use
-NeoBundle 'Valloric/YouCompleteMe'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'nvie/vim-togglemouse'
-NeoBundle 'Lokaltog/powerline'
-NeoBundle 'SirVer/ultisnips'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'mileszs/ack.vim'
-NeoBundle 'davidhalter/jedi-vim'
-" NeoBundle 'rodjek/vim-puppet'
-NeoBundle 'IN3D/vim-raml'
-NeoBundle 'puppetlabs/puppet-syntax-vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'scrooloose/nerdtree'
+Plugin 'nvie/vim-togglemouse'
+Plugin 'Lokaltog/powerline'
+Plugin 'SirVer/ultisnips'
+Plugin 'scrooloose/syntastic'
+Plugin 'bling/vim-airline'
+Plugin 'tpope/vim-fugitive'
+Plugin 'mileszs/ack.vim'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'IN3D/vim-raml'
+Plugin 'puppetlabs/puppet-syntax-vim'
 
 " secondary
-NeoBundle 'Blackrush/vim-gocode'
-NeoBundle 'dhruvasagar/vim-table-mode'
-NeoBundle 'gmarik/vundle'
-NeoBundle 'honza/vim-snippets'
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'vitorgalvao/autoswap_mac'
+Plugin 'Blackrush/vim-gocode'
+Plugin 'dhruvasagar/vim-table-mode'
+Plugin 'honza/vim-snippets'
+Plugin 'kien/ctrlp.vim'
+Plugin 'vitorgalvao/autoswap_mac'
 
 " should look into
-NeoBundle 'sourcegraph/sourcegraph-vim'
-NeoBundle 'terryma/vim-expand-region'
-NeoBundle 'idanarye/vim-merginal'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Rykka/InstantRst'
+Plugin 'terryma/vim-expand-region'
+Plugin 'idanarye/vim-merginal'
+Plugin 'Shougo/unite.vim'
+Plugin 'Rykka/InstantRst'
 
 " color and syntax
-NeoBundle 'evanmiller/nginx-vim-syntax'
-NeoBundle 'wting/rust.vim'
-NeoBundle 'flazz/vim-colorschemes'
-NeoBundle 'endel/vim-github-colorscheme'
-NeoBundle 'vim-scripts/CycleColor'
+Plugin 'evanmiller/nginx-vim-syntax'
+Plugin 'wting/rust.vim'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'endel/vim-github-colorscheme'
+Plugin 'vim-scripts/CycleColor'
 
-NeoBundle 'Scuilion/gradle-syntastic-plugin'
+Plugin 'Scuilion/gradle-syntastic-plugin'
 
-let g:syntastic_java_checkers=['javac']
-let g:syntastic_java_javac_config_file_enabled = 1
-
-call neobundle#end()
-
-NeoBundleCheck
-
+call vundle#end()
 filetype plugin indent on     " required!
 
 " nerdtree
@@ -284,6 +273,9 @@ let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_enable_balloons = 1
 let g:syntastic_ignore_files = ['\m^/usr/local/', '\m\c\/.tox/']
+
+let g:syntastic_java_checkers=['javac']
+let g:syntastic_java_javac_config_file_enabled = 1
 
 
 let g:ycm_register_as_syntastic_checker = 0
