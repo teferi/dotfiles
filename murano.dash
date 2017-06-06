@@ -16,7 +16,10 @@ query = NOT label:Code-Review<=2 NOT label:Verified<=-1 NOT owner:self
 query = label:Code-Review>=1 NOT label:Code-Review<=-1 AND NOT label:Verified<=-1 NOT owner:self NOT reviewer:self limit:50
 
 [section "Maybe Review?"]
-query = NOT owner:self NOT reviewer:self limit:25
+query = NOT owner:self NOT reviewer:self limit:15
+
+[section "Negative Feedback"]
+query = label:Code-Review<=-1 limit:15
 
 [section "My +1s"]
 query = label:Code-Review=1,self limit:25
