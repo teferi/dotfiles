@@ -88,13 +88,6 @@ set backspace=indent,eol,start
 set whichwrap=b,[,],<,>
 
 set pastetoggle=<F2>
-" folding requires some more work
-"set nofoldenable
-"set foldmethod=indent
-"set foldlevel=1
-"set foldnestmax=10
-"nnoremap <space> za
-"vnoremap <space> zf
 
 " set W to be 'sudo w'
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
@@ -108,23 +101,10 @@ nnoremap  ;  :
 " redo in just 2 btns
 noremap rr <C-r>
 
-" I really don't like my cursor being moved
-" noremap a i
-
-" And stay there
-" inoremap <silent> <Esc> <C-O>:stopinsert<CR>
-" inoremap <silent> <Esc> <Esc>`^
-" inoremap ff <Esc>l
-
-" set timeoutlen=500
-
-let CursorColumnI = 0 "the cursor column position in INSERT
+let CursorColumnI = 0 " the cursor column position in INSERT
 autocmd InsertEnter * let CursorColumnI = col('.')
 autocmd CursorMovedI * let CursorColumnI = col('.')
 autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
-
-
-
 
 if has('python')
 
@@ -187,7 +167,6 @@ Plugin 'VundleVim/Vundle.vim'
 " important and everyday use
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdtree'
-Plugin 'nvie/vim-togglemouse'
 Plugin 'Lokaltog/powerline'
 Plugin 'SirVer/ultisnips'
 Plugin 'scrooloose/syntastic'
@@ -195,11 +174,14 @@ Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-fugitive'
 Plugin 'mileszs/ack.vim'
 Plugin 'davidhalter/jedi-vim'
-Plugin 'IN3D/vim-raml'
-Plugin 'puppetlabs/puppet-syntax-vim'
+Plugin 'Vimjas/vim-python-pep8-indent'
+
+" go
+Plugin 'fatih/vim-go'
 
 " secondary
-Plugin 'Blackrush/vim-gocode'
+Plugin 'Yggdroot/indentLine'
+Plugin 'nvie/vim-togglemouse'
 Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'honza/vim-snippets'
 Plugin 'kien/ctrlp.vim'
@@ -212,13 +194,13 @@ Plugin 'Shougo/unite.vim'
 Plugin 'Rykka/InstantRst'
 
 " color and syntax
+Plugin 'IN3D/vim-raml'
+Plugin 'puppetlabs/puppet-syntax-vim'
 Plugin 'evanmiller/nginx-vim-syntax'
 Plugin 'wting/rust.vim'
 Plugin 'flazz/vim-colorschemes'
-Plugin 'endel/vim-github-colorscheme'
 Plugin 'vim-scripts/CycleColor'
 
-Plugin 'Scuilion/gradle-syntastic-plugin'
 
 call vundle#end()
 filetype plugin indent on     " required!
@@ -252,7 +234,7 @@ autocmd WinEnter * if &buftype ==# 'quickfix' && winnr('$') == 1 | quit | endif
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_mode_map = { 'mode': 'active',
-                           \  'active_filetypes': ['python', 'c', 'js'],
+                           \  'active_filetypes': ['python', 'c', 'js', 'go'],
                            \ 'passive_filetypes': ['html'] }
 " need to edit pylint config before it is usable
 " let g:syntastic_python_checkers = ['pep8', 'flake8', 'pylint']
@@ -310,6 +292,9 @@ let g:jedi#rename_command = "<leader>dr"
 let g:jedi#use_splits_not_buffers = "right"
 let g:jedi#use_tabs_not_buffers = 0
 
+nmap <silent> <leader>gs :GoDef<CR>
+nmap <silent> <leader>ga :vsplit<CR> :GoDef<CR>
+
 " I need to remember how to use it =(
 let g:table_mode_corner_corner = '+'
 
@@ -335,10 +320,9 @@ endif
 let g:ackhighlight = 1
 let g:ackpreview = 1
 let g:ackautoclose = 1
-" let g:ack_autofold_results = 1
-
-" github color scheme is nice
-set t_Co=256
+let g:ack_autofold_results = 0
+cnoreabbrev Ack Ack!
+nnoremap <Leader>a :Ack!<Space>
 
 " csope
 nmap <leader>cs :vert scs find s <C-R>=expand("<cword>")<CR><CR>
@@ -359,7 +343,5 @@ nmap <C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
 
-" if &diff
-"    colorscheme github-tef
-" endif
-" au FilterWritePre * if &diff | colorscheme github-tef | endif
+let g:go_def_reuse_buffer = 1
+let g:indentLine_enabled = 0
