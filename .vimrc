@@ -9,14 +9,15 @@ endif
 set history=10000
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
-set incsearch " do incremental searching
 
 " do not enable mouse by default
 set mouse=
 set ttymouse=xterm2
 
 syntax on
-set hlsearch
+set incsearch " do incremental searching
+set hlsearch " highlight search results
+nnoremap <leader><space> :nohlsearch<CR>
 
 " /foo matches all foo Foo FOO
 set ignorecase
@@ -40,6 +41,8 @@ autocmd FileType ruby setlocal ts=2 sts=2 sw=2
 autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
 autocmd FileType gitcommit setlocal spell
 
+" save session
+nnoremap <leader>s :mksession<CR>
 
 " Remove Trailing Whitespaces
 command! RTW :%s/\s\+$//e
@@ -73,6 +76,7 @@ set undodir=~/.vim/undodir
 set undofile
 set undolevels=10000
 set undoreload=10000
+nnoremap <leader>u :GundoToggle<CR>
 
 set dictionary+=/usr/share/dict/words
 set laststatus=2
@@ -87,7 +91,9 @@ set wildmenu
 set backspace=indent,eol,start
 set whichwrap=b,[,],<,>
 
+" F2 toggles paste, leave paste when done
 set pastetoggle=<F2>
+autocmd InsertLeave * set nopaste
 
 " set W to be 'sudo w'
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
@@ -188,6 +194,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'vitorgalvao/autoswap_mac'
 
 " should look into
+Plugin 'sjl/gundo.vim'
 Plugin 'terryma/vim-expand-region'
 Plugin 'idanarye/vim-merginal'
 Plugin 'Shougo/unite.vim'
@@ -208,7 +215,7 @@ filetype plugin indent on     " required!
 " nerdtree
 nmap <C-n> :NERDTreeToggle<CR>
 " open tag definition in a vsplit
-nmap <C-p> :vsplit <CR>:exec("tag ".expand("<cword>"))<CR>
+" nmap <C-p> :vsplit <CR>:exec("tag ".expand("<cword>"))<CR>
 
 " region expanding
 vmap v <Plug>(expand_region_expand)
@@ -250,8 +257,6 @@ let g:syntastic_cpp_auto_refresh_includes = 1
 " let g:syntastic_javascript_checkers = ['jscs', 'jshint', 'eslint']
 let g:syntastic_javascript_checkers = ['eslint']
 " let g:syntastic_rst_checkers = ['rstcheck']
-" expands when defined, not when used.
-" let g:syntastic_sh_shellcheck_args = ['--exclude=SC2139']
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_enable_balloons = 1
 let g:syntastic_ignore_files = ['\m^/usr/local/', '\m\c\/.tox/']
@@ -309,6 +314,9 @@ let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 
 let g:ycm_server_keep_logfiles=1
+
+" CtrlP settings
+let g:ctrlp_open_new_file = 'v'
 
 autocmd VimEnter UltiSnipsAddFiletypes django
 
