@@ -203,7 +203,7 @@ Plugin 'Rykka/InstantRst'
 " color and syntax
 Plugin 'IN3D/vim-raml'
 Plugin 'puppetlabs/puppet-syntax-vim'
-Plugin 'evanmiller/nginx-vim-syntax'
+Plugin 'vim-scripts/nginx.vim'
 Plugin 'wting/rust.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-scripts/CycleColor'
@@ -304,7 +304,7 @@ nmap <silent> <leader>ga :vsplit<CR> :GoDef<CR>
 let g:table_mode_corner_corner = '+'
 
 let g:airline_theme = 'molokaitef'
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 
 let g:UltiSnipsExpandTrigger = "<c-j>"
 let g:UltiSnipsJumpForwardTrigger = "<c-j>"
