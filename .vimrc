@@ -182,6 +182,8 @@ Plugin 'mileszs/ack.vim'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'Vimjas/vim-python-pep8-indent'
 
+Plugin 'alvan/vim-closetag'
+
 " go
 Plugin 'fatih/vim-go'
 
@@ -203,10 +205,10 @@ Plugin 'Rykka/InstantRst'
 " color and syntax
 Plugin 'IN3D/vim-raml'
 Plugin 'puppetlabs/puppet-syntax-vim'
-Plugin 'vim-scripts/nginx.vim'
 Plugin 'wting/rust.vim'
-Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-scripts/CycleColor'
+Plugin 'lepture/vim-jinja'
+Plugin 'saltstack/salt-vim'
 
 
 call vundle#end()
@@ -245,7 +247,7 @@ let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'passive_filetypes': ['html'] }
 " need to edit pylint config before it is usable
 " let g:syntastic_python_checkers = ['pep8', 'flake8', 'pylint']
-let g:syntastic_python_checkers = ['pep8', 'flake8']
+let g:syntastic_python_checkers = ['flake8']
 
 let g:syntastic_c_checkers = ['gcc', 'make', 'ycm']
 let g:syntastic_c_compiler_options = '-Wall'
@@ -309,7 +311,6 @@ let g:airline_powerline_fonts = 0
 let g:UltiSnipsExpandTrigger = "<c-j>"
 let g:UltiSnipsJumpForwardTrigger = "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger = "<c-p>"
-let g:UltiSnipsUsePythonVersion = 2
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 
