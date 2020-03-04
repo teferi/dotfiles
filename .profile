@@ -125,6 +125,7 @@ export LDFLAGS="-L/usr/local/opt/node@10/lib"
 export CPPFLAGS="-I/usr/local/opt/node@10/include"
 export PATH="/usr/local/opt/qt/bin:$PATH"
 
+# Local tokens
 if [ -f "$HOME/.tokens" ]; then
     . "$HOME/.tokens";
 fi
