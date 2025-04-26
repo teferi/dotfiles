@@ -2,7 +2,7 @@
 
 alias d=ls
 alias ls='ls -G'
-alias ll='ls -la'
+alias ll='ls -la --color'
 
 alias ctop='top -o cpu'
 alias mtop='top -o vsize'
@@ -44,7 +44,8 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=''
 export GIT_PS1_SHOWUPSTREAM="verbose"
-PS1='\[\e[1;34m\]\u \[\e[1;32m\]\W \[\e[1;33m\]$(__git_ps1 "(%s)")\$\[\e[0m\] '
+PS1='\[\e[1;34m\]\u\[\e[1;33m\]@\h \[\e[1;32m\]\W \[\e[1;33m\]$(__git_ps1 "(%s)")\$\[\e[0m\] '
+
 
 
 # check if there is a venv and activate it
@@ -109,6 +110,8 @@ export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
 export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
 export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 
+export HISTCONTROL="ignoreboth:erasedups"
+
 if type brew &>/dev/null
 then
   if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]
@@ -122,4 +125,5 @@ then
   fi
 fi
 
-export EDITOR="$HOMEBREW_PREFIX/bin/vim"
+export EDITOR="vim"
+export SUDO_EDITOR="vim"

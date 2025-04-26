@@ -1,5 +1,4 @@
 #!/bin/bash
-
-if [ -f ~/.bash_profile ]; then
-    . ~/.bash_profile
+if [ -f ~/.profile ]; then
+    . ~/.profile
 fi
