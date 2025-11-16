@@ -9,7 +9,6 @@ alias mtop='top -o vsize'
 alias gti='git'
 alias gut='git'
 alias gti='git'
-alias buuca='brew update && brew upgrade && brew cleanup && brew autoremove'
 
 alias activate='. ./env/bin/activate'
 alias reactivate='deactivate && activate'
@@ -44,7 +43,7 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=''
 export GIT_PS1_SHOWUPSTREAM="verbose"
-PS1='\[\e[1;34m\]\u\[\e[1;33m\]@\h \[\e[1;32m\]\W \[\e[1;33m\]$(__git_ps1 "(%s)")\$\[\e[0m\] '
+# PS1='\[\e[1;34m\]\u\[\e[1;33m\]@\h \[\e[1;32m\]\W \[\e[1;33m\]$(__git_ps1 "(%s)")\$\[\e[0m\] '
 
 
 
@@ -102,6 +101,12 @@ if [ -f "$HOME/.cargo/env" ]; then
     source "$HOME/.cargo/env"
 fi
 
+export HISTCONTROL="ignoreboth:erasedups"
+
+if type brew &>/dev/null
+then
+alias buuc='brew update && brew upgrade && brew cleanup'
+alias buuca='brew update && brew upgrade && brew cleanup && brew autoremove'
 # generated with brew shellenv bash
 export HOMEBREW_PREFIX="/opt/homebrew"
 export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
@@ -110,10 +115,7 @@ export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
 export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
 export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 
-export HISTCONTROL="ignoreboth:erasedups"
 
-if type brew &>/dev/null
-then
   if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]
   then
     source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
